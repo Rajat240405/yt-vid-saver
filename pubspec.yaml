@@ -1,0 +1,44 @@
+name: study_stream
+description: StudyStream - Download study videos from YouTube
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Networking
+  dio: ^5.4.0
+
+  # Local storage
+  shared_preferences: ^2.2.2
+
+  # File path
+  path_provider: ^2.1.2
+
+  # Permissions
+  permission_handler: ^11.3.0
+
+  # Open downloaded video
+  open_filex: ^4.3.4
+
+  # State management
+  provider: ^6.1.2
+
+  # UI
+  google_fonts: ^6.1.0
+
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/

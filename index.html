@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyStream – Download Study Videos</title>
+  <meta name="description" content="Download YouTube study videos fast and easily with StudyStream." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+
+  <!-- ── App Shell ─────────────────────────────────────────────────────── -->
+  <div id="app">
+
+    <!-- ── Screens (one visible at a time) ────────────────────────────── -->
+    <main id="screens">
+
+      <!-- HOME SCREEN -->
+      <section id="screen-home" class="screen active">
+        <!-- AppBar -->
+        <header class="appbar">
+          <div class="appbar-brand">
+            <div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+            <span class="brand-name">StudyStream</span>
+          </div>
+          <button class="icon-btn" id="btn-settings" aria-label="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+        </header>
+
+        <!-- Scrollable content -->
+        <div class="screen-scroll">
+          <!-- Download Card -->
+          <div class="card download-card">
+            <label class="card-label" for="url-input">Study Material Link</label>
+            <input id="url-input" type="url" class="url-input" placeholder="Paste YouTube Link here..." autocomplete="off" spellcheck="false" />
+            <div id="error-msg" class="error-msg hidden"></div>
+
+            <div class="quality-section">
+              <p class="quality-label">FORMAT QUALITY</p>
+              <div class="quality-chips" id="quality-chips" role="group" aria-label="Format quality">
+                <button class="chip selected" data-quality="1080p">1080p</button>
+                <button class="chip" data-quality="720p">720p</button>
+                <button class="chip" data-quality="Audio Only">Audio Only</button>
+              </div>
+            </div>
+
+            <button id="btn-download" class="btn-primary">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span id="btn-download-text">Download Video</span>
+              <span id="btn-download-spinner" class="spinner hidden"></span>
+            </button>
+          </div>
+
+          <!-- Recent Downloads -->
+          <div class="section-header">
+            <h2 class="section-title">Recent Downloads</h2>
+            <button class="see-all-btn" id="btn-see-all">See All</button>
+          </div>
+          <div id="recent-list" class="download-list">
+            <!-- Populated by JS -->
+            <div class="empty-state" id="home-empty">
+              <div class="empty-icon">📥</div>
+              <p class="empty-title">No downloads yet</p>
+              <p class="empty-sub">Paste a YouTube link above to get started</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LIBRARY SCREEN -->
+      <section id="screen-library" class="screen">
+        <header class="appbar">
+          <div class="appbar-brand">
+            <span class="brand-name" style="font-size:18px">All Downloads</span>
+          </div>
+          <div id="library-count" class="count-badge hidden"></div>
+        </header>
+        <div class="screen-scroll">
+          <div id="library-list" class="download-list" style="padding-top:16px">
+            <div class="empty-state" id="library-empty">
+              <div class="empty-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+              </div>
+              <p class="empty-title">Your library is empty</p>
+              <p class="empty-sub">Downloaded videos will appear here</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROFILE SCREEN -->
+      <section id="screen-profile" class="screen">
+        <header class="appbar">
+          <div class="appbar-brand">
+            <span class="brand-name" style="font-size:18px">Profile</span>
+          </div>
+        </header>
+        <div class="screen-scroll" style="padding-top:24px">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <h3 class="profile-name">Student</h3>
+            <p class="profile-sub">Study hard, download smart</p>
+          </div>
+
+          <div class="settings-section">
+            <p class="settings-group-label">SETTINGS</p>
+            <div class="settings-list">
+              <div class="settings-tile">
+                <div class="settings-tile-icon blue">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                </div>
+                <div class="settings-tile-body">
+                  <p class="settings-tile-title">API Base URL</p>
+                  <p class="settings-tile-sub">http://localhost:3000/api</p>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+              <div class="settings-tile" style="flex-direction:column; align-items:stretch; cursor:default;">
+                <div style="display:flex; align-items:center; gap:14px;">
+                  <div class="settings-tile-icon blue">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  </div>
+                  <div class="settings-tile-body">
+                    <p class="settings-tile-title">Download Location</p>
+                    <p class="settings-tile-sub">Set folder where files are saved</p>
+                  </div>
+                </div>
+                <div class="dir-input-wrap">
+                  <input id="dir-input" class="dir-text-input" type="text" placeholder="e.g. C:\Users\You\Downloads\Videos" autocomplete="off" spellcheck="false" />
+                  <button id="dir-save-btn" class="dir-save-btn">Save</button>
+                </div>
+                <p id="dir-saved-hint" class="dir-saved-hint hidden">✓ Location saved</p>
+              </div>
+              <div class="settings-tile" id="btn-check-ytdlp">
+                <div class="settings-tile-icon blue">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="settings-tile-body">
+                  <p class="settings-tile-title">Check yt-dlp</p>
+                  <p class="settings-tile-sub">Verify server connectivity</p>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+              <div class="settings-tile">
+                <div class="settings-tile-icon blue">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <div class="settings-tile-body">
+                  <p class="settings-tile-title">About</p>
+                  <p class="settings-tile-sub">StudyStream v1.0.0</p>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ── Bottom Navigation ──────────────────────────────────────────── -->
+    <nav class="bottom-nav" role="navigation" aria-label="Main navigation">
+      <button class="nav-item active" data-screen="home" id="nav-home">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </button>
+      <button class="nav-item" data-screen="library" id="nav-library">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+        <span>Library</span>
+      </button>
+      <button class="nav-item" data-screen="profile" id="nav-profile">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Profile</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
