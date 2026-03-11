@@ -1,15 +1,18 @@
 FROM node:20-slim
 
-# Install ffmpeg (for yt-dlp merging) and curl
+# Install ffmpeg, curl, ca-certificates and python3
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     curl \
+    ca-certificates \
     python3 \
     --no-install-recommends \
+    && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Install yt-dlp binary
-RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp \
+RUN curl -L --cacert /etc/ssl/certs/ca-certificates.crt \
+    https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp \
     -o /usr/local/bin/yt-dlp \
     && chmod a+rx /usr/local/bin/yt-dlp
 
