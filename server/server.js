@@ -197,7 +197,13 @@ app.get('/api/download-file/:downloadId', (req, res) => {
     const filename = path.basename(dl.filePath);
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.setHeader('Content-Type', 'video/mp4');
-    fs.createReadStream(dl.filePath).pipe(res);
+    const stream = fs.createReadStream(dl.filePath);
+    stream.pipe(res);
+    // Delete file from server disk once transfer is complete
+    res.on('finish', () => {
+        fs.unlink(dl.filePath, () => {});
+        delete downloads[downloadId];
+    });
 });
 
 // ── POST /api/cancel/:downloadId ──────────────────────────────────────────
